@@ -1,0 +1,8 @@
+body{font-family:Arial,sans-serif;margin:0;background:#f4f6f8}
+.app{max-width:760px;margin:40px auto;padding:24px;background:white;border-radius:12px;box-shadow:0 2px 12px #0002}
+input,textarea,select{display:block;width:100%;box-sizing:border-box;padding:10px;margin:8px 0;border:1px solid #ccc;border-radius:6px}
+textarea{min-height:100px}
+button{padding:9px 14px;margin:6px 4px 6px 0;border:0;border-radius:6px;cursor:pointer}
+.card{padding:14px;margin:10px 0;background:#f8f8f8;border-radius:8px}
+.done{text-decoration:line-through}
+.row{display:flex;gap:8px}.row input{flex:1}
