@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Todo Manager
 
 React frontend + Python FastAPI backend sample application.
@@ -40,3 +41,6 @@ Frontend: http://localhost:5173
 - CORS
 
 > This learning version stores data in memory, so data resets when the backend restarts.
+=======
+# todo-application
+>>>>>>> 717230be175b894ea43bf45df30678bd7499f8ef
