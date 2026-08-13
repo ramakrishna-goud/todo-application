@@ -1,0 +1,27 @@
+name: Todo App - Test Runner
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: self-hosted
+
+    steps:
+      - name: Checkout Todo Application
+        uses: actions/checkout@v4
+
+      - name: Test Ubuntu Runner
+        run: |
+          echo "Hello from my Todo application"
+          echo "User:"
+          whoami
+          echo "Current directory:"
+          pwd
+          echo "Files:"
+          ls -la
+
+      - name: Check Git
+        run: git --version
