@@ -1,1 +1,1 @@
-Testing self-hosted runner
+Self-hosted runner test
