@@ -1,4 +1,4 @@
-name: Todo App - Test Runner
+name: Todo App CI
 
 on:
   push:
@@ -10,18 +10,30 @@ jobs:
     runs-on: self-hosted
 
     steps:
-      - name: Checkout Todo Application
+      - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Test Ubuntu Runner
-        run: |
-          echo "Hello from my Todo application"
-          echo "User:"
-          whoami
-          echo "Current directory:"
-          pwd
-          echo "Files:"
-          ls -la
+      - name: Check Python
+        run: python3 --version
 
-      - name: Check Git
-        run: git --version
+      - name: Create Python Virtual Environment
+        run: python3 -m venv .venv
+
+      - name: Install Backend Dependencies
+        run: .venv/bin/python -m pip install -r backend/requirements.txt
+
+      - name: Validate FastAPI Backend
+        run: .venv/bin/python -c "from backend.main import app; print(app.title)"
+
+      - name: Check Node and npm
+        run: |
+          node --version
+          npm --version
+
+      - name: Install Frontend Dependencies
+        working-directory: frontend
+        run: npm ci
+
+      - name: Build React Frontend
+        working-directory: frontend
+        run: npm run build
