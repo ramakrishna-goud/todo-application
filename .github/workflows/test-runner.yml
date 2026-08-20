@@ -3,7 +3,7 @@ name: Todo App - Test Runner
 on:
   push:
     branches:
-      - main
+      - dev
 
 jobs:
   test:
