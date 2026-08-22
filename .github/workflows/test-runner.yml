@@ -1,4 +1,4 @@
-name: Todo App CI
+name: Todo App CI/CD
 
 on:
   push:
@@ -6,7 +6,7 @@ on:
       - dev
 
 jobs:
-  test:
+  test-and-deploy:
     runs-on: self-hosted
 
     steps:
@@ -37,3 +37,13 @@ jobs:
       - name: Build React Frontend
         working-directory: frontend
         run: npm run build
+
+      - name: Deploy Todo App
+        run: |
+          mkdir -p /home/ramakrishna/todo-app-deployment/backend
+          mkdir -p /home/ramakrishna/todo-app-deployment/frontend
+          mkdir -p /home/ramakrishna/todo-app-deployment/.venv
+          cp -r backend/. /home/ramakrishna/todo-app-deployment/backend/
+          cp -r frontend/dist/. /home/ramakrishna/todo-app-deployment/frontend/
+          cp -r .venv/. /home/ramakrishna/todo-app-deployment/.venv/
+          echo "Todo App deployed successfully"
