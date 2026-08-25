@@ -6,7 +6,11 @@ COPY requirements.txt .
 
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY main.py .
+RUN addgroup --system app && adduser --system --ingroup app app
+
+COPY --chown=app:app main.py .
+
+USER app
 
 EXPOSE 8000
 

@@ -3,14 +3,33 @@ services:
     build: ./backend
     image: todo-backend:v1
     container_name: todo-backend-container
+    restart: unless-stopped
     ports:
       - "8000:8000"
+    environment:
+      APP_ENV: development
+    healthcheck:
+      test:
+        - CMD
+        - python
+        - -c
+        - "import urllib.request; urllib.request.urlopen('http://localhost:8000/todos')"
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+    mem_limit: 256m
+    cpus: "0.50"
 
   frontend:
     build: ./frontend
     image: todo-frontend:v1
     container_name: todo-frontend-container
+    restart: unless-stopped
     ports:
       - "3000:80"
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy
+    mem_limit: 128m
+    cpus: "0.25"
