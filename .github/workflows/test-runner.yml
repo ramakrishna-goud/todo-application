@@ -98,6 +98,7 @@ jobs:
 
       - name: Verify Minikube Cluster
         run: |
+          minikube update-context
           minikube status
           kubectl get nodes
 
@@ -108,6 +109,7 @@ jobs:
         run: minikube image build -t todo-backend:v1 ./backend
 
       - name: Build Frontend Image in Minikube
+
         run: minikube image build -t todo-frontend:v1 ./frontend
 
       - name: Apply Kubernetes Manifests
