@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - dev
+      - feature/kubernetes-cicd
 
 permissions:
   contents: read
@@ -87,3 +88,59 @@ jobs:
           tags: |
             ghcr.io/ramakrishna-goud/todo-frontend:v1
             ghcr.io/ramakrishna-goud/todo-frontend:latest
+  deploy-to-minikube:
+    needs: build-and-push-images
+    runs-on: self-hosted
+    env:
+      HOME: /home/ramakrishna
+      KUBECONFIG: /home/ramakrishna/.kube/config
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Verify Kubernetes Cluster
+        run: |
+          whoami
+          echo "HOME=$HOME"
+          echo "KUBECONFIG=$KUBECONFIG"
+          kubectl config current-context
+          kubectl cluster-info
+          kubectl get nodes
+
+      - name: Validate Kubernetes Manifests
+        run: kubectl apply --dry-run=server -f k8s/
+
+      - name: Build Backend Image in Minikube
+        run: minikube image build -t todo-backend:v1 ./backend
+
+      - name: Build Frontend Image in Minikube
+
+        run: minikube image build -t todo-frontend:v1 ./frontend
+
+      - name: Apply Kubernetes Manifests
+        run: kubectl apply -f k8s/
+
+      - name: Restart Kubernetes Deployments
+        run: |
+          kubectl rollout restart deployment/todo-backend
+          kubectl rollout restart deployment/todo-frontend
+
+      - name: Wait for Kubernetes Rollouts
+        run: |
+          kubectl rollout status deployment/todo-backend --timeout=180s
+          kubectl rollout status deployment/todo-frontend --timeout=180s
+
+      - name: Display Kubernetes Resources
+        run: |
+          kubectl get deployments
+          kubectl get pods
+          kubectl get services todo-backend todo-frontend
+
+      - name: Test Application Inside Kubernetes
+        run: |
+          kubectl run "cicd-test-${{ github.run_id }}" \
+            --image=busybox:1.36 \
+            --restart=Never \
+            --rm -i \
+            -- wget -qO- http://todo-frontend/api/todos
