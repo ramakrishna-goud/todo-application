@@ -93,22 +93,19 @@ jobs:
     runs-on: self-hosted
     env:
       HOME: /home/ramakrishna
-      KUBECONFIG: /home/ramakrishna/.kube/config  
-  deploy-to-minikube:
-    needs: build-and-push-images
-    runs-on: self-hosted
-    env:
-      HOME: /home/ramakrishna
       KUBECONFIG: /home/ramakrishna/.kube/config
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Verify Minikube Cluster
+      - name: Verify Kubernetes Cluster
         run: |
-          minikube update-context
-          minikube status
+          whoami
+          echo "HOME=$HOME"
+          echo "KUBECONFIG=$KUBECONFIG"
+          kubectl config current-context
+          kubectl cluster-info
           kubectl get nodes
 
       - name: Validate Kubernetes Manifests
